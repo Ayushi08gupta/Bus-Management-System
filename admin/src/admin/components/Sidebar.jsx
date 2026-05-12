@@ -1,7 +1,7 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Bus, MapPin, Users, LayoutDashboard, Route, UserCheck, BarChart3, Bell, FileText, Settings, LogOut } from 'lucide-react';
+import { Bus, MapPin, Users, LayoutDashboard, Route, UserCheck, BarChart3, Bell, FileText, Settings, LogOut, Upload } from 'lucide-react';
 
 const Sidebar = () => {
   const links = [
@@ -11,6 +11,7 @@ const Sidebar = () => {
     { name: 'Routes', path: '/admin/routes', icon: <Route size={20} /> },
     { name: 'Drivers', path: '/admin/drivers', icon: <Users size={20} /> },
     { name: 'Students', path: '/admin/students', icon: <UserCheck size={20} /> },
+    { name: 'Student Upload', path: '/admin/student-upload', icon: <Upload size={20} /> },
     { name: 'Analytics', path: '/admin/analytics', icon: <BarChart3 size={20} /> },
     { name: 'Reports', path: '/admin/reports', icon: <FileText size={20} /> },
     { name: 'Notifications', path: '/admin/notifications', icon: <Bell size={20} /> },

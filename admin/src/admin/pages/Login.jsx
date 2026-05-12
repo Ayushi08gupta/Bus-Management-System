@@ -3,19 +3,29 @@ import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Bus, Lock, User, ArrowRight } from 'lucide-react';
 import GlassCard from '../components/GlassCard';
+import api from '../../api/axiosClient';
 
 const Login = () => {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [email, setEmail] = useState('admin@campusbus.edu');
+  const [password, setPassword] = useState('password123');
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-    // Fake login delay
-    setTimeout(() => {
-      setIsLoading(false);
+    setError('');
+    try {
+      const { data } = await api.post('/auth/login', { email, password });
+      localStorage.setItem('admin_token', data.access_token);
+      localStorage.setItem('admin_user', JSON.stringify(data.user));
       navigate('/admin/dashboard');
-    }, 1200);
+    } catch (err) {
+      setError(err.response?.data?.detail || 'Login failed. Check your credentials.');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -49,10 +59,11 @@ const Login = () => {
                   <User size={18} className="text-gray-500" />
                 </div>
                 <input 
-                  type="text" 
-                  defaultValue="admin@campusbus.edu"
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                   className="w-full bg-black/30 border border-white/10 text-white rounded-xl py-3 pl-11 pr-4 focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/50 transition-all placeholder:text-gray-600"
-                  placeholder="Enter your ID"
+                  placeholder="Enter your email"
                   required
                 />
               </div>
@@ -68,14 +79,21 @@ const Login = () => {
                   <Lock size={18} className="text-gray-500" />
                 </div>
                 <input 
-                  type="password" 
-                  defaultValue="password123"
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
                   className="w-full bg-black/30 border border-white/10 text-white rounded-xl py-3 pl-11 pr-4 focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/50 transition-all placeholder:text-gray-600"
                   placeholder="Enter your password"
                   required
                 />
               </div>
             </div>
+
+            {error && (
+              <p className="text-red-400 text-sm text-center bg-red-500/10 border border-red-500/20 rounded-xl py-2 px-4">
+                {error}
+              </p>
+            )}
 
             <button 
               type="submit" 
