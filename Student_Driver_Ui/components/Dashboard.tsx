@@ -4,38 +4,16 @@ import { useState } from 'react';
 import { Card } from './ui/card';
 import { Badge } from './ui/badge';
 import { Button } from './ui/button';
-import { Input } from './ui/input';
 import { BusTracking } from './tracking/BusTracking';
 import { RouteSearch } from './search/RouteSearch';
 import { DriverDashboard } from './driver/DriverDashboard';
 import { ComplaintModal } from './ComplaintModal';
 import {
-  Activity,
-  Route,
-  User,
-  BarChart3,
-  TrendingUp,
-  Users,
   Bus,
-  PlayCircle,
-  StopCircle,
   Clock,
-  AlertCircle,
-  Settings,
   Bell,
-  MapPin,
 } from 'lucide-react';
 import { useAuth } from '@/app/AuthContext';
-
-// Mock bus data
-const mockBuses = [
-  { id: '01', number: 'BUS-01', route: 'Main Gate → College', driver: 'Raj', arrivalTime: '08:30', distance: '2.3 km', status: 'On Time', occupied: 42, capacity: 52 },
-  { id: '02', number: 'BUS-02', route: 'Kolar → College', driver: 'Ramesh', arrivalTime: '09:15', distance: '5.8 km', status: 'On Time', occupied: 38, capacity: 52 },
-  { id: '03', number: 'BUS-03', route: 'Downtown → College', driver: 'Kumar', arrivalTime: '09:05', distance: '3.5 km', status: 'Delayed', occupied: 45, capacity: 52 },
-  { id: '04', number: 'BUS-04', route: 'Airport → College', driver: 'Vikram', arrivalTime: '10:00', distance: '7.2 km', status: 'On Time', occupied: 50, capacity: 52 },
-  { id: '05', number: 'BUS-05', route: 'Station → College', driver: 'Arjun', arrivalTime: '08:15', distance: '1.2 km', status: 'On Time', occupied: 40, capacity: 52 },
-  { id: '06', number: 'BUS-06', route: 'Market → College', driver: 'Suresh', arrivalTime: '10:45', distance: '9.1 km', status: 'On Time', occupied: 48, capacity: 52 },
-];
 
 // Mock alerts data
 const mockAlerts = [
@@ -64,7 +42,7 @@ export function Dashboard() {
   // Show tracking view when a bus is selected in student dashboard
   if (user.role === 'student' && selectedBusId) {
     return (
-      <div className="min-h-screen py-8 px-4 sm:px-6 lg:px-8">
+      <div className="min-h-screen py-4 sm:py-8 px-3 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
           <BusTracking busId={selectedBusId} onBack={() => setSelectedBusId(null)} />
         </div>
@@ -73,15 +51,15 @@ export function Dashboard() {
   }
 
   return (
-    <div className="min-h-screen py-8 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen py-6 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-4xl font-bold text-gray-800 mb-2">
-            {user.role === 'student' ? 'Student' : user.role === 'driver' ? 'Driver' : 'Admin'} Dashboard
+        <div className="mb-6">
+          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-800 mb-1">
+            {user.role === 'student' ? 'Student' : 'Admin'} Dashboard
           </h1>
-          <p className="text-gray-600">
-            Welcome back, {user.name}! {user.role === 'student' ? "Find and track your bus in real-time." : "Manage your operations efficiently."}
+          <p className="text-sm sm:text-base text-gray-600">
+            Welcome back, {user.name}! {user.role === 'student' ? 'Find and track your bus in real-time.' : 'Manage your operations efficiently.'}
           </p>
         </div>
 
@@ -92,11 +70,11 @@ export function Dashboard() {
             <RouteSearch onSelectBus={setSelectedBusId} />
 
             {/* Tabs and Actions */}
-            <div className="flex flex-wrap gap-2 items-center justify-between">
-              <div className="flex gap-2">
+            <div className="flex flex-col xs:flex-row flex-wrap gap-2 items-start xs:items-center justify-between">
+              <div className="flex gap-2 flex-wrap">
                 <button
                   onClick={() => setActiveTab('overview')}
-                  className={`px-6 py-2 rounded-full font-medium transition-all ${
+                  className={`px-4 sm:px-6 py-2 rounded-full font-medium text-sm transition-all ${
                     activeTab === 'overview'
                       ? 'glass-card bg-purple-400/30 text-gray-800'
                       : 'glass-card bg-white/20 text-gray-700 hover:bg-white/30'
@@ -106,19 +84,19 @@ export function Dashboard() {
                 </button>
                 <button
                   onClick={() => setActiveTab('notifications')}
-                  className={`px-6 py-2 rounded-full font-medium transition-all flex items-center gap-2 ${
+                  className={`px-4 sm:px-6 py-2 rounded-full font-medium text-sm transition-all flex items-center gap-2 ${
                     activeTab === 'notifications'
                       ? 'glass-card bg-purple-400/30 text-gray-800'
                       : 'glass-card bg-white/20 text-gray-700 hover:bg-white/30'
                   }`}
                 >
                   <Bell className="w-4 h-4" />
-                  Notifications
+                  Alerts
                 </button>
               </div>
               <Button
                 onClick={() => setShowComplaint(true)}
-                className="glass-card bg-red-400/30 hover:bg-red-400/40 text-red-700 border border-red-200/50 font-medium"
+                className="glass-card bg-red-400/30 hover:bg-red-400/40 text-red-700 border border-red-200/50 font-medium text-sm"
               >
                 Report Issue
               </Button>
@@ -165,7 +143,7 @@ export function Dashboard() {
 
                   <div>
                     <p className="text-sm text-gray-600 mb-2">Estimated Arrival</p>
-                    <p className="text-5xl font-bold text-gray-800 mb-4">5 mins</p>
+                    <p className="text-4xl sm:text-5xl font-bold text-gray-800 mb-4">5 mins</p>
 
                     <div className="space-y-2">
                       <div className="flex justify-between text-sm">
@@ -224,88 +202,6 @@ export function Dashboard() {
                 </div>
               </Card>
             )}
-          </div>
-        )}
-
-        {/* Driver Dashboard */}
-        {user.role === 'driver' && (
-          <div className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {/* Trip Control */}
-              <Card className="glass-card p-6 card-hover">
-                <h3 className="text-xl font-semibold text-gray-800 mb-6">Trip Control</h3>
-
-                <div className="space-y-4">
-                  <Button className="w-full btn-glass bg-gradient-to-r from-green-400 to-green-500 text-white h-12 text-base font-medium flex items-center justify-center gap-2">
-                    <PlayCircle className="w-5 h-5" />
-                    Start Trip
-                  </Button>
-
-                  <Button
-                    variant="outline"
-                    className="w-full btn-glass btn-outline-glass text-gray-800 h-12 text-base font-medium flex items-center justify-center gap-2"
-                  >
-                    <StopCircle className="w-5 h-5" />
-                    Stop Trip
-                  </Button>
-                </div>
-
-                <div className="mt-6 p-4 rounded-lg bg-white/50 backdrop-blur">
-                  <p className="text-sm text-gray-600">Trip Status</p>
-                  <div className="flex items-center gap-2 mt-2">
-                    <div className="w-3 h-3 rounded-full bg-green-500 animate-pulse"></div>
-                    <p className="font-semibold text-gray-800">In Transit</p>
-                  </div>
-                </div>
-              </Card>
-
-              {/* Status Toggle */}
-              <Card className="glass-card p-6 card-hover">
-                <h3 className="text-xl font-semibold text-gray-800 mb-6">Status</h3>
-
-                <div className="space-y-3">
-                  <div className="flex items-center justify-between p-4 rounded-lg bg-white/50 backdrop-blur">
-                    <div>
-                      <p className="text-sm text-gray-600">On-Time Status</p>
-                      <p className="font-semibold text-gray-800 mt-1">Currently On Time</p>
-                    </div>
-                    <Badge className="bg-green-400/80 text-green-900 border-0">On</Badge>
-                  </div>
-
-                  <div className="flex items-center justify-between p-4 rounded-lg bg-white/50 backdrop-blur">
-                    <div>
-                      <p className="text-sm text-gray-600">Delay Status</p>
-                      <p className="font-semibold text-gray-800 mt-1">No Delays</p>
-                    </div>
-                    <Badge className="bg-gray-400/80 text-gray-900 border-0">Off</Badge>
-                  </div>
-                </div>
-              </Card>
-
-              {/* Route Info */}
-              <Card className="glass-card p-6 card-hover md:col-span-2">
-                <h3 className="text-xl font-semibold text-gray-800 mb-4">Current Route</h3>
-
-                <div className="space-y-3">
-                  <div className="p-4 rounded-lg bg-white/50 backdrop-blur">
-                    <p className="text-sm text-gray-600">Route Assignment</p>
-                    <p className="text-lg font-semibold text-gray-800 mt-1">Kolar → College</p>
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="p-4 rounded-lg bg-white/50 backdrop-blur">
-                      <p className="text-sm text-gray-600">Passengers</p>
-                      <p className="text-2xl font-bold text-gray-800 mt-1">42/52</p>
-                    </div>
-
-                    <div className="p-4 rounded-lg bg-white/50 backdrop-blur">
-                      <p className="text-sm text-gray-600">Time Remaining</p>
-                      <p className="text-2xl font-bold text-gray-800 mt-1">25 mins</p>
-                    </div>
-                  </div>
-                </div>
-              </Card>
-            </div>
           </div>
         )}
 

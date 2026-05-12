@@ -2,6 +2,8 @@
 @import 'tw-animate-css';
 
 @custom-variant dark (&:is(.dark *));
+/* xs breakpoint: 480px — fills gap between mobile and sm(640px) */
+@custom-variant xs (@media (min-width: 480px));
 
 :root {
   /* Pastel Palette */
@@ -132,10 +134,25 @@
   }
   html {
     @apply bg-gradient-to-br from-purple-100 via-blue-50 to-pink-50;
+    scroll-behavior: smooth;
+    /* Prevent horizontal overflow on all screens */
+    overflow-x: hidden;
   }
   body {
     @apply bg-transparent text-foreground;
     min-height: 100vh;
+    -webkit-tap-highlight-color: transparent;
+    overflow-x: hidden;
+  }
+  * {
+    box-sizing: border-box;
+  }
+  img, video {
+    max-width: 100%;
+  }
+  /* Touch-friendly minimum tap target */
+  button, a, [role="button"] {
+    min-height: 36px;
   }
 }
 
