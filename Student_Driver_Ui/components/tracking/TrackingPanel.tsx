@@ -16,11 +16,11 @@ export function TrackingPanel({ route }: TrackingPanelProps) {
   return (
     <div className="space-y-4">
       {/* Bus Header */}
-      <div className="glass-card p-6 rounded-2xl">
+      <div className="glass-card p-4 sm:p-6 rounded-2xl">
         <div className="flex items-start justify-between mb-4">
           <div>
-            <h2 className="text-3xl font-bold text-gray-800">{route.busNumber}</h2>
-            <p className="text-gray-600 mt-1 font-medium">{route.routeName}</p>
+            <h2 className="text-2xl sm:text-3xl font-bold text-gray-800">{route.busNumber}</h2>
+            <p className="text-gray-600 mt-1 font-medium text-sm sm:text-base">{route.routeName}</p>
           </div>
           <Badge className={`${statusColor} border-2 py-2 px-3 text-sm font-semibold`}>
             {route.status}

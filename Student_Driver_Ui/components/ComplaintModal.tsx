@@ -3,8 +3,8 @@
 import { useState } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from './ui/dialog';
 import { Button } from './ui/button';
-import { Input } from './ui/input';
 import { AlertCircle, CheckCircle } from 'lucide-react';
+import { api } from '@/lib/api';
 
 interface ComplaintModalProps {
   isOpen: boolean;
@@ -33,15 +33,10 @@ export function ComplaintModal({
   const [description, setDescription] = useState('');
   const [submitted, setSubmitted] = useState(false);
 
-  const handleSubmit = () => {
-    if (selectedType && description.trim()) {
-      console.log('Complaint submitted:', {
-        type: selectedType,
-        description,
-        busNumber,
-        driverName,
-        timestamp: new Date().toISOString(),
-      });
+  const handleSubmit = async () => {
+    if (!selectedType || !description.trim()) return;
+    try {
+      await api.complaints.submit({ type: selectedType, description, busNumber, driverName });
       setSubmitted(true);
       setTimeout(() => {
         setSubmitted(false);
@@ -49,6 +44,8 @@ export function ComplaintModal({
         setDescription('');
         onClose();
       }, 2000);
+    } catch {
+      alert('Failed to submit complaint. Please try again.');
     }
   };
 

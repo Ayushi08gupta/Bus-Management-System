@@ -1,6 +1,7 @@
 'use client';
 
 import React, { createContext, useContext, useState } from 'react';
+import { api } from '@/lib/api';
 
 export type UserRole = 'student' | 'driver';
 
@@ -29,17 +30,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const login = async (email: string, password: string, role: UserRole) => {
     setIsLoading(true);
     try {
-      // Simulate API delay
-      await new Promise(resolve => setTimeout(resolve, 500));
-      
-      // Mock user creation
-      setUser({
-        id: Math.random().toString(36).substr(2, 9),
-        email,
-        name: email.split('@')[0],
-        role,
-        busNumber: role === 'student' ? `BUS-${Math.floor(Math.random() * 100)}` : undefined,
-      });
+      const data = await api.auth.login(email, password, role);
+      localStorage.setItem('token', data.token);
+      setUser(data.user);
     } finally {
       setIsLoading(false);
     }
@@ -48,23 +41,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const register = async (name: string, email: string, password: string, role: UserRole) => {
     setIsLoading(true);
     try {
-      // Simulate API delay
-      await new Promise(resolve => setTimeout(resolve, 500));
-      
-      // Mock user creation
-      setUser({
-        id: Math.random().toString(36).substr(2, 9),
-        email,
-        name,
-        role,
-        busNumber: role === 'student' ? `BUS-${Math.floor(Math.random() * 100)}` : undefined,
-      });
+      const data = await api.auth.register(name, email, password, role);
+      localStorage.setItem('token', data.token);
+      setUser(data.user);
     } finally {
       setIsLoading(false);
     }
   };
 
   const logout = () => {
+    localStorage.removeItem('token');
     setUser(null);
   };
 
@@ -77,8 +63,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
 export function useAuth() {
   const context = useContext(AuthContext);
-  if (context === undefined) {
-    throw new Error('useAuth must be used within AuthProvider');
-  }
+  if (context === undefined) throw new Error('useAuth must be used within AuthProvider');
   return context;
 }
