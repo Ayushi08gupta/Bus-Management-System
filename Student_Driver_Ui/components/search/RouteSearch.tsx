@@ -1,11 +1,12 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { Card } from '../ui/card';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
-import { ArrowRight, MapPin, Search, X, Star } from 'lucide-react';
+import { ArrowRight, MapPin, Search } from 'lucide-react';
 import { DriverDetailsModal } from '../DriverDetailsModal';
+import { api } from '@/lib/api';
 
 // Bus data structure
 interface BusOption {
@@ -163,6 +164,31 @@ export function RouteSearch({ onSelectBus }: RouteSearchProps) {
   const [hasSearched, setHasSearched] = useState(false);
   const [selectedBusForDetails, setSelectedBusForDetails] = useState<BusOption | null>(null);
   const [showDriverDetails, setShowDriverDetails] = useState(false);
+  const [liveBuses, setLiveBuses] = useState<BusOption[]>(busDatabase);
+
+  // Fetch live bus data from backend
+  useEffect(() => {
+    api.buses.getAll()
+      .then((data: any[]) => {
+        const mapped: BusOption[] = data.map(b => ({
+          id: b.id,
+          number: b.number,
+          route: b.route,
+          departure: '08:00 AM',
+          arrival: '09:00 AM',
+          duration: '60 mins',
+          driver: b.driver,
+          stops: 4,
+          occupancy: b.occupied,
+          capacity: b.capacity,
+          status: b.status,
+          fromStop: b.route.split(' → ')[0],
+          toStop: b.route.split(' → ')[1] || 'College',
+        }));
+        setLiveBuses(mapped);
+      })
+      .catch(() => {}); // fallback to static data on error
+  }, []);
 
   // Filter stops for suggestions
   const fromSuggestions = useMemo(() => {
@@ -183,13 +209,12 @@ export function RouteSearch({ onSelectBus }: RouteSearchProps) {
   // Filter buses based on selection
   const filteredBuses = useMemo(() => {
     if (!fromStop || !toStop) return [];
-    
-    return busDatabase.filter(bus => {
+    return liveBuses.filter(bus => {
       const fromMatch = bus.fromStop.toLowerCase().includes(fromStop.toLowerCase());
       const toMatch = bus.toStop.toLowerCase().includes(toStop.toLowerCase());
       return fromMatch && toMatch;
     });
-  }, [fromStop, toStop]);
+  }, [fromStop, toStop, liveBuses]);
 
   const handleSearch = () => {
     if (fromStop && toStop) {
@@ -205,11 +230,11 @@ export function RouteSearch({ onSelectBus }: RouteSearchProps) {
   return (
     <div className="space-y-6">
       {/* Search Card */}
-      <Card className="glass-card p-6">
-        <h2 className="text-2xl font-bold text-gray-800 mb-6">Search Buses</h2>
+      <Card className="glass-card p-4 sm:p-6">
+        <h2 className="text-xl sm:text-2xl font-bold text-gray-800 mb-4 sm:mb-6">Search Buses</h2>
 
         {/* Search Fields */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 mb-4">
           {/* From */}
           <div className="space-y-2">
             <label className="text-sm font-medium text-gray-700">From</label>
@@ -335,8 +360,8 @@ export function RouteSearch({ onSelectBus }: RouteSearchProps) {
                           <span className="font-medium">{bus.toStop}</span>
                         </div>
 
-                        {/* Time and Details */}
-                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-sm">
+                        {/* Time and Details — 2 cols on mobile, 4 on sm+ */}
+                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3 text-sm">
                           <div>
                             <p className="text-gray-600 text-xs">Departure</p>
                             <p className="font-semibold text-gray-800">{bus.departure}</p>
