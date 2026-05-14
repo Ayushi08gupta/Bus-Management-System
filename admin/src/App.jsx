@@ -10,6 +10,7 @@ import Buses from './admin/pages/Buses';
 import Drivers from './admin/pages/Drivers';
 import RoutesPage from './admin/pages/Routes';
 import Students from './admin/pages/Students';
+import StudentUpload from './admin/pages/StudentUpload';
 import Analytics from './admin/pages/Analytics';
 import Notifications from './admin/pages/Notifications';
 import Reports from './admin/pages/Reports';
@@ -34,6 +35,7 @@ function App() {
           <Route path="drivers" element={<Drivers />} />
           <Route path="routes" element={<RoutesPage />} />
           <Route path="students" element={<Students />} />
+          <Route path="student-upload" element={<StudentUpload />} />
           <Route path="analytics" element={<Analytics />} />
           <Route path="notifications" element={<Notifications />} />
           <Route path="reports" element={<Reports />} />
